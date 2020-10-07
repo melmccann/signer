@@ -128,6 +128,13 @@ public class Cli {
         if (cmd.hasOption("trim")) {
             this.trim = true;
         }
+        if(cmd.hasOption("privateKey")){
+            this.privateKeyLocation = cmd.getOptionValue("privateKey");
+        }
+        if(cmd.hasOption("publicKey")){
+            this.publicKeyLocation = cmd.getOptionValue("publicKey");
+        }
+
         if (cmd.hasOption("encodingIn")) {
             if (!EnumUtils.isValidEnum(encoding.class, cmd.getOptionValue("encodingIn"))) {
                 System.out.println("encodingIn must be one of the following values.Default is RAW. All available options are: " + this.getEncodingValues());
@@ -250,8 +257,12 @@ public class Cli {
         }
         if (overlapCount == 0) {
             try {
-                System.out.println("You must use one of the follow:" +
-                        "" + cmd.getParsedOptionValue("k"));
+                System.out.println("You must use one of the follow:\n" +
+                        "" + this.prettyPrintOption("k") + "\n" +
+                        "" + this.prettyPrintOption("s") + "\n" +
+                        "" + this.prettyPrintOption("vs") + "\n" +
+                        "" + this.prettyPrintOption("ha") + "\n" +
+                        "" + this.prettyPrintOption("vh") + "\n");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -271,7 +282,7 @@ public class Cli {
     private String prettyPrintOption(String opt) {
         Option option = options.getOption(opt);
         String prefix = "-" + option.getOpt() + ", --" + option.getLongOpt();
-        int tabsCount = 10 - Math.round(prefix.length() / 4);
+        int tabsCount = 8 - Math.round(prefix.length() / 4);
         StringBuffer tabs = new StringBuffer();
         for (int i = 0; i <= tabsCount; i++) {
             tabs.append("\t");

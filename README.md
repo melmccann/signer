@@ -27,7 +27,7 @@ The resulting jar file that you need to run this is located at `target/signer-ja
 ## Help
 
 ```bash
-usage: java -jar signer.jar
+usage: java -jar target/signer-jar-with-dependencies.jar
  -data,--dataFile <dataFile>                File to be signed
  -encIn,--encodingIn <encodingIn>           The encoding of the file(s)
                                             that you want to read from.
@@ -80,6 +80,7 @@ Reverses the signing process using the signature and the public key and then com
 Gets the Sha256 hash of the dataFile and compares with the hash in hashFile
 
 
+
 ```
 
 Note that you can also specify the encoding for the input and output files. 
@@ -90,6 +91,47 @@ Also note that for the data file this option is not available, it is read as is.
 
 E.g. Create keys in HEX format using
 ```bash
-java -jar target/signer-jar-with-dependencies.jar --keygen --publicKey public.key --privateKey private.key --encodingOut HEX
+java -jar signer-jar-with-dependencies.jar --keygen --publicKey public.key --privateKey private.key --encodingOut HEX
+```
+
+## Full example
+If you download the built version from GitHub the jar file name might be slightly different, e.g. `signer-0.0.1-jar-with-dependencies.jar`
+
+```bash
+# Generate the keys
+$ java -jar signer-jar-with-dependencies.jar --keygen --publicKey public.key --privateKey private.key --encodingOut HEX
+
+# Check contents of files
+$ cat public.key 
+4b595dc6410a9be1fe760e05156707f14981f1cee16b5ba0f84006a4b6c57377 
+$ cat private.key 
+445db8fd1901d3135b0e8c4c01187539ffc1c76b4a4e8b0bcbb75d1cde5cd693m
+
+# Hash some data 
+$ wget https://github.com/melmccann/signer/blob/aa8671cb3cc7aaac19c6a88c3326ffafb22dbcce/src/main/resources/data.json
+
+# Get the Sha256 hash of the data and save in file
+$ java -jar signer-jar-with-dependencies.jar --hash --dataFile data.json --hashFile data_hash.txt  --encodingIn HEX --encodingOut HEX
+
+$ cat data_hash.txt 
+16957169319852e87cf1959d62a2fac3fed60ef6638eb7daa37739be7d3fb115
+
+# verify the hash
+$ java -jar signer-jar-with-dependencies.jar --verifyHash --dataFile data.json --hashFile data_hash.txt  --encodingIn HEX
+...
+PASS: hash is verified!!
+
+# Sign the hash using the private key
+
+$ java -jar signer-jar-with-dependencies.jar --sign --privateKey private.key --hashFile data_hash.txt --signatureFile signature.txt --encodingIn HEX --encodingOut HEX
+$ cat signature.txt 
+3f4cc30262be115a83bd286086c5ee74fd0e9bf6f09d9869ba4c669500450c0b709f06f7fa66fbf9a348fe5cb3fcf150e5535a6e9053fa3b4f73eda420a8fa07
+
+# Verify the signature
+$ java -jar signer-jar-with-dependencies.jar --verifySignature --publicKey public.key --hashFile data_hash.txt --signatureFile signature.txt --encodingIn HEX 
+...
+PASS: digital signature is verified!!
 
 ```
+
+
