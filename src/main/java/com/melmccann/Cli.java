@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * Tool for performing sha256 hashing and Ed25519 signing
  */
 public class Cli {
-    private String commandName = "java -jar signer.jar";
+    private String commandName = "java -jar target/signer-jar-with-dependencies.jar";
     private Options options;
     private String publicKeyLocation = "./ed25519key.pub";
     private String privateKeyLocation = "./ed25519key.priv";
@@ -116,7 +116,7 @@ public class Cli {
     }
 
     private void processCommands(String[] commands, CommandLine cmd) {
-        if (cmd.hasOption("help")) {
+        if (cmd.hasOption("help") | cmd.getOptions().length==0) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp(this.commandName, this.options);
             System.out.println(this.usageExamples());
