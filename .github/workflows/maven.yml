@@ -1,0 +1,52 @@
+name: Master Branch
+
+on:
+  push:
+    branches:
+      - 'master'
+jobs:
+
+  test:
+    name: Test - Units & Integrations
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11.0.4
+      - name: Maven Package
+        run: mvn -B clean package -DskipTests
+      - name: Maven Verify
+        run: mvn -B clean verify -DskipTests
+
+  signer:
+    name: Test - Signer
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11.0.4
+      - name: Signer Test
+        run: mvn -B clean verify
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  artifact:
+    name: Publish - GitHub Packages
+    runs-on: ubuntu-18.04
+    needs: [test, signer]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11.0.4
+      - name: Publish artifact on GitHub Packages
+        run: mvn -B -e -X clean deploy -DskipTests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
