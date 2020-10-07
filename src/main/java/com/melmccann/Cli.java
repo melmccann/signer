@@ -36,46 +36,6 @@ public class Cli {
     private encoding outputEncoding = encoding.RAW;
 
     public static void main(String[] args) {
-        //create signature
-//        args = new String[5];
-//        args[0] = "--hashFile=hash.txt";
-//        args[1] = "--privateKey=ed25519key.priv";
-//        args[2] = "--signatureFile=signature.pub";
-//        args[3] = "--sign";
-//        args[4] = "--encodingOut=RAW";
-
-//        args = new String[5];
-//        args[0] = "--hashFile=hash.txt";
-//        args[1] = "--privateKey=ed25519key.priv";
-//        args[2] = "--signatureFile=signature64.pub";
-//        args[3] = "--sign";
-//        args[4] = "--encodingOut=BASE64";
-
-
-        //create hash
-//        args = new String[4];
-//        args[0] = "--hashFile=hash.txt";
-//        args[1] = "--dataFile=/home/mel/exchanges/scantrust/data.json";
-//        args[2] = "--hash";
-//        args[3] = "--encodingOut=RAW";
-
-
-//verify signature
-//        args = new String[5];
-//        args[0] = "--hashFile=hash.txt";
-//        args[1] = "--publicKey=ed25519key.pub";
-//        args[2] = "--signatureFile=signature.pub";
-//        args[3] = "--verifySignature";
-//        args[4] = "--encodingIn=RAW";
-
-
-//verify hash
-        args = new String[3];
-        args[0] = "--hashFile=hash.txt";
-        args[1] = "--dataFile=/home/mel/exchanges/scantrust/data.json";
-        args[2] = "--verifyHash";
-
-
         Cli cli = new Cli();
         try {
             cli.execute(args);
